@@ -750,15 +750,7 @@ Need help? Reach out:
 
 Give a ⭐️ if this project helped you!
 
-<div align="center">
 
-**Made with ❤️ by the SkillPath Team**
-
-[Website](https://skillpath.com) • [Documentation](https://docs.skillpath.com) • [Blog](https://blog.skillpath.com)
-
-</div>
-
----
 
 ## 📊 Statistics
 
