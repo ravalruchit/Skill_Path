@@ -718,7 +718,7 @@ SOFTWARE.
 
 ## 👥 Authors & Contributors
 
-- **Parth Panchal** - *Initial work* - [GitHub](https://github.com/yourusername)
+- **RAVAL RUCHIT & HIMESH MUNGAPATI** - *Initial work* - [GitHub](https://github.com/yourusername)
 
 See also the list of [contributors](https://github.com/yourusername/skillpath/contributors) who participated in this project.
 
