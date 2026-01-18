@@ -767,12 +767,4 @@ Give a ⭐️ if this project helped you!
 ![GitHub issues](https://img.shields.io/github/issues/yourusername/skillpath)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/skillpath)
 
----
 
-<div align="center">
-
-### 🚀 Ready to Transform Your Career?
-
-[Get Started Now](http://localhost/skillpath/register.html) | [View Demo](http://localhost/skillpath/) | [Read Docs](https://docs.skillpath.com)
-
-</div>
