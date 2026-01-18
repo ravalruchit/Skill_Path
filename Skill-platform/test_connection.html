@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Test - SkillPath</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success {
+            border-left: 4px solid #10b981;
+        }
+        .error {
+            border-left: 4px solid #ef4444;
+        }
+        .pending {
+            border-left: 4px solid #f59e0b;
+        }
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #4f46e5;
+        }
+        pre {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        h1 { color: #1f2937; }
+        h3 { color: #374151; margin-top: 0; }
+        .info { color: #6b7280; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 SkillPath Connection Test</h1>
+    <p class="info">This page will help you diagnose connection issues.</p>
+
+    <div class="test-box pending" id="pathTest">
+        <h3>1. API Path Configuration</h3>
+        <p id="pathResult">Testing...</p>
+    </div>
+
+    <div class="test-box pending" id="apiTest">
+        <h3>2. API Connection Test</h3>
+        <button onclick="testAPI()">Test API Connection</button>
+        <pre id="apiResult">Click button to test</pre>
+    </div>
+
+    <div class="test-box pending" id="loginTest">
+        <h3>3. Login Test</h3>
+        <input type="email" id="testEmail" placeholder="Email" value="admin@skillpath.com" style="padding: 8px; margin: 5px; width: 250px;">
+        <input type="password" id="testPassword" placeholder="Password" value="password" style="padding: 8px; margin: 5px; width: 250px;">
+        <button onclick="testLogin()">Test Login</button>
+        <pre id="loginResult">Enter credentials and click test</pre>
+    </div>
+
+    <div class="test-box pending" id="registerTest">
+        <h3>4. Register Test</h3>
+        <button onclick="testRegister()">Test Registration</button>
+        <pre id="registerResult">Click button to test</pre>
+    </div>
+
+    <div class="test-box pending" id="corsTest">
+        <h3>5. CORS Test</h3>
+        <button onclick="testCORS()">Test CORS Headers</button>
+        <pre id="corsResult">Click button to test</pre>
+    </div>
+
+    <script>
+        // CHANGE THIS TO MATCH YOUR PATH
+        const API_BASE = 'http://localhost/dashboard/Skill-platform/api';
+
+        // Test 1: Check path
+        window.addEventListener('DOMContentLoaded', () => {
+            const pathBox = document.getElementById('pathTest');
+            const pathResult = document.getElementById('pathResult');
+            
+            pathResult.innerHTML = `
+                <strong>Current API Base Path:</strong><br>
+                ${API_BASE}<br><br>
+                <strong>Your project location:</strong><br>
+                C:\\xampp\\htdocs\\dashboard\\Skill-platform\\<br><br>
+                <strong>Expected URLs:</strong><br>
+                - Auth: <a href="${API_BASE}/auth.php?action=check" target="_blank">${API_BASE}/auth.php?action=check</a><br>
+                - Dashboard: ${API_BASE}/dashboard.php<br>
+                - Admin: ${API_BASE}/admin.php
+            `;
+            
+            pathBox.className = 'test-box success';
+        });
+
+        // Test 2: API Connection
+        async function testAPI() {
+            const box = document.getElementById('apiTest');
+            const result = document.getElementById('apiResult');
+            
+            box.className = 'test-box pending';
+            result.textContent = 'Testing connection...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth.php?action=check`, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                result.textContent = `✅ SUCCESS!\n\nStatus: ${response.status}\nResponse:\n${JSON.stringify(data, null, 2)}`;
+                box.className = 'test-box success';
+            } catch (error) {
+                result.textContent = `❌ ERROR!\n\n${error.message}\n\nPossible causes:\n- Apache is not running\n- Wrong API path\n- CORS issue\n- PHP error`;
+                box.className = 'test-box error';
+            }
+        }
+
+        // Test 3: Login
+        async function testLogin() {
+            const box = document.getElementById('loginTest');
+            const result = document.getElementById('loginResult');
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            box.className = 'test-box pending';
+            result.textContent = 'Testing login...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth.php?action=login`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.textContent = `✅ LOGIN SUCCESS!\n\nUser: ${data.user.full_name}\nEmail: ${data.user.email}\nAdmin: ${data.user.is_admin}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+                    box.className = 'test-box success';
+                } else {
+                    result.textContent = `❌ LOGIN FAILED!\n\n${data.message}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+                    box.className = 'test-box error';
+                }
+            } catch (error) {
+                result.textContent = `❌ CONNECTION ERROR!\n\n${error.message}\n\nThis means JavaScript cannot reach the API.\n\nCheck:\n1. Is Apache running?\n2. Is the API path correct?\n3. Check browser console (F12)`;
+                box.className = 'test-box error';
+            }
+        }
+
+        // Test 4: Register
+        async function testRegister() {
+            const box = document.getElementById('registerTest');
+            const result = document.getElementById('registerResult');
+            
+            box.className = 'test-box pending';
+            result.textContent = 'Testing registration...';
+            
+            const testUser = {
+                full_name: 'Test User',
+                email: 'test' + Date.now() + '@example.com',
+                password: 'password123',
+                career_goal: 'Test Goal',
+                sector: 'healthcare'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth.php?action=register`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testUser)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.textContent = `✅ REGISTRATION SUCCESS!\n\nTest user created:\nEmail: ${testUser.email}\nPassword: password123\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+                    box.className = 'test-box success';
+                } else {
+                    result.textContent = `❌ REGISTRATION FAILED!\n\n${data.message}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+                    box.className = 'test-box error';
+                }
+            } catch (error) {
+                result.textContent = `❌ CONNECTION ERROR!\n\n${error.message}`;
+                box.className = 'test-box error';
+            }
+        }
+
+        // Test 5: CORS
+        async function testCORS() {
+            const box = document.getElementById('corsTest');
+            const result = document.getElementById('corsResult');
+            
+            box.className = 'test-box pending';
+            result.textContent = 'Testing CORS headers...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth.php?action=check`, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+                
+                result.textContent = `✅ CORS Headers:\n\n${JSON.stringify(headers, null, 2)}\n\nIf you see 'access-control-allow-origin', CORS is configured correctly.`;
+                box.className = 'test-box success';
+            } catch (error) {
+                result.textContent = `❌ CORS ERROR!\n\n${error.message}\n\nThis might be a CORS configuration issue.`;
+                box.className = 'test-box error';
+            }
+        }
+
+        // Auto-run API test on load
+        setTimeout(() => {
+            testAPI();
+        }, 500);
+    </script>
+</body>
+</html>
