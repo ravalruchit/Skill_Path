@@ -1,7 +1,7 @@
 // File: js/admin.js
 // Complete Admin Dashboard JavaScript - All Features Included
 
-const API_BASE = 'http://localhost/dashboard/Skill-platform/api';
+const API_BASE = 'https://techeys.onrender.com/api/auth.php';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAdminAuth();
