@@ -1,7 +1,7 @@
 // File: js/auth.js
 // Fixed Authentication Logic with Debug Info
 
-const API_BASE = 'http://localhost/dashboard/Skill-platform/api';
+const API_BASE = 'https://techeys.onrender.com/api/auth.php';
 
 console.log('Auth.js loaded. API_BASE:', API_BASE);
 
