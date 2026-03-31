@@ -1,5 +1,5 @@
 // Enhanced Dashboard JavaScript with Full AI/ML Integration
-const API_BASE = 'http://localhost/dashboard/Skill-platform/api';
+const API_BASE = 'https://techeys.onrender.com/api/auth.php';
 
 // State Management
 const state = {
